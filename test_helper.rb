@@ -3,14 +3,17 @@ class TestHelper
   # @return [Boolean] successful
   def self.test_against_rubies ruby_versions_without_patchlevel
     successes = []
+    File.rename "Gemfile.lock", "Gemfile.lock.original"
     resolve_versions(ruby_versions_without_patchlevel).each do |version|
       puts "Running tests against ruby #{version}"
+      File.delete "Gemfile.lock" rescue nil
       success = system(%{/bin/bash -l -c 'source "$HOME/.rvm/scripts/rvm"; rvm use #{version}; bundle install && bundle exec rspec'})
       successes << success
       unless success
         puts "Failed against ruby #{version}"
       end
     end
+    File.rename "Gemfile.lock.original", "Gemfile.lock"
     successes.all?{|s| s}
   end
 

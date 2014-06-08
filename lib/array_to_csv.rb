@@ -40,9 +40,12 @@ class ArrayToCsv
     hash.values_at(*head)
   end
 
-  # TODO: return FasterCSV in old ruby
   def choose_csv_lib
-    CSV
+    if RUBY_VERSION =~ /^1\.8/
+      FasterCSV
+    else
+      CSV
+    end
   end
 
 end

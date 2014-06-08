@@ -1,4 +1,8 @@
-require 'csv'
+if RUBY_VERSION =~ /^1\.8/
+  require 'fastercsv'
+else
+  require 'csv'
+end
 require 'array_to_csv/core_ext'
 
 describe "array_to_csv/core_ext" do

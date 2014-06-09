@@ -7,8 +7,8 @@ end
 
 class Array
 
-  def to_csv
-    ArrayToCsv.new(self).to_csv
+  def to_csv *args
+    ArrayToCsv.new(self).to_csv *args
   end
 
 end

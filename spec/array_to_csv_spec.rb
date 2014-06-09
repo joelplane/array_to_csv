@@ -41,4 +41,23 @@ describe ArrayToCsv do
 
   end
 
+  describe ".to_csv(io)" do
+
+    subject { ArrayToCsv.new([{:key1 => 'value1'}, {:key2 => 'value2'}]) }
+
+    it "should stream output to provided io object" do
+      io = double
+      expect(io).to receive(:write).with("key1,key2\n")
+      expect(io).to receive(:write).with("value1,\n")
+      expect(io).to receive(:write).with(",value2\n")
+      expect(io).to receive(:close)
+      subject.to_csv(io)
+    end
+
+    it "should return nil" do
+      io = double :write => nil, :close => nil
+      expect(subject.to_csv(io)).to be_nil
+    end
+  end
+
 end

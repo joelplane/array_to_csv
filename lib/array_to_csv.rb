@@ -5,15 +5,31 @@ class ArrayToCsv
     @csv = csv_lib
   end
 
-  def to_csv
-    @csv.generate do |csv|
-      each_row do |row|
-        csv << row
-      end
-    end
+  # @return [String, nil]
+  def to_csv io=nil
+    io ? to_csv_io(io) : to_csv_string
   end
 
   private
+
+  # @return [String]
+  def to_csv_string
+    StringIO.new.tap do |string_io|
+      self.to_csv string_io
+    end.string
+  end
+
+  def to_csv_io io
+    each_row do |row|
+      write_line io, row
+    end
+    io.close
+    nil
+  end
+
+  def write_line io, row
+    io.write @csv.generate_line row
+  end
 
   def each_row
     yield head

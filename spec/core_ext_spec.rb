@@ -16,4 +16,12 @@ describe "array_to_csv/core_ext" do
     expect(array.to_csv).to eq(ArrayToCsv.new(array).to_csv)
   end
 
+  it "should delegate with arguments" do
+    array = []
+    fake_io, inst = double, double
+    expect(ArrayToCsv).to receive(:new).and_return(inst)
+    expect(inst).to receive(:to_csv).with(fake_io)
+    array.to_csv fake_io
+  end
+
 end

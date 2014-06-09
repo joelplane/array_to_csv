@@ -8,8 +8,15 @@ class ArrayToCsv
   end
 
   # @return [String, nil]
-  def to_csv io=nil
-    io ? to_csv_io(io) : to_csv_string
+  def to_csv io_or_file_path=nil
+    case io_or_file_path
+      when nil
+        to_csv_string
+      when String
+        to_csv_file io_or_file_path
+      else
+        to_csv_io io_or_file_path
+    end
   end
 
   private
@@ -19,6 +26,11 @@ class ArrayToCsv
     StringIO.new.tap do |string_io|
       self.to_csv string_io
     end.string
+  end
+
+  def to_csv_file file_path
+    file_io = File.open(file_path, 'w')
+    self.to_csv file_io
   end
 
   # @return [nil]

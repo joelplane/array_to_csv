@@ -58,6 +58,20 @@ describe ArrayToCsv do
       io = double :write => nil, :close => nil
       expect(subject.to_csv(io)).to be_nil
     end
+
+  end
+
+  describe ".to_csv(file_path)" do
+
+    subject { ArrayToCsv.new([{:key1 => 'value1'}, {:key2 => 'value2'}]) }
+    let(:csv_output) { "key1,key2\nvalue1,\n,value2\n" }
+    let(:test_path) { "/tmp/array_to_csv_test_output.csv" }
+
+    it "should write CSV to file" do
+      subject.to_csv test_path
+      expect(File.read(test_path)).to eq(csv_output)
+    end
+
   end
 
 end

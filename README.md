@@ -32,17 +32,25 @@ $ gem install array_to_csv
 
 ## Example Usage
 
-### Without reopening Array class
+### Using Array#to_csv (re-opening the Array class)
+
+If you require array_to_csv/core_ext,
 
 ```ruby
-data = [
-  {:first_name => 'Rob', :last_name => 'Bobber'},
-  {:first_name => 'Bob', :age => 103}
-]
-puts ArrayToCsv.new(data).to_csv
+require 'array_to_csv/core_ext'
 ```
 
-Outputs
+(or require it from within your Gemfile)
+you can call to_csv directly on an array.
+
+```ruby
+puts [
+  {:first_name => 'Rob', :last_name => 'Bobber'},
+  {:first_name => 'Bob', :age => 103}
+].to_csv
+```
+
+This outputs:
 
     first_name,last_name,age
     Rob,Bobber,
@@ -55,27 +63,40 @@ Which would look something like this in your favourite spreadsheet editor
 | Rob        | Bobber    |     |
 | Bob        |           | 103 |
 
-### Using Array#to_csv (re-opeing the Array class)
+When no arguments are given to to_csv, the CSV data is returned as a string.
 
-If you require array_to_csv/core_ext,
-
-```ruby
-require 'array_to_csv/core_ext'
-```
-
-(or require it from within your Gemfile)
-you can call to_csv on the array itself.
+You can pass in a file path, and the CSV data will be written directly to file,
+instead of being returned as a string.
 
 ```ruby
-puts [
+[
   {:first_name => 'Rob', :last_name => 'Bobber'},
   {:first_name => 'Bob', :age => 103}
-].to_csv
-end
+].to_csv("/tmp/people.csv")
 ```
 
-Which produces the same output
+You can also pass in a File object as the first argument, or any other
+IO/IO-like object (anything that implements #write(string) and #close).
+
+### Without reopening Array class
+
+If you don't want to being reopening core classes, you can convert an array to CSV
+like this:
+
+```ruby
+data = [
+  {:first_name => 'Rob', :last_name => 'Bobber'},
+  {:first_name => 'Bob', :age => 103}
+]
+puts ArrayToCsv.new(data).to_csv
+```
+
+Which produces the same output as above
 
     first_name,last_name,age
     Rob,Bobber,
     Rob,,103
+
+The interface for ArrayToCsv#to_csv is the same as that for Array#to_csv.
+
+You can pass in a file path, File, or IO/IO-like object.
